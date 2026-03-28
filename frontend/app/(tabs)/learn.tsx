@@ -9,8 +9,9 @@ const topicIcons: Record<string, string> = {
 };
 
 const comingSoonTopics = [
-  { title: 'コンピュータネットワーク', description: 'TCP/IP、HTTP、DNS、ルーティング', icon: '🌐' },
   { title: 'コンピュータアーキテクチャ', description: 'CPU、メモリ階層、パイプライン', icon: '🖥️' },
+  { title: 'クラウドコンピューティング', description: 'AWS、コンテナ、マイクロサービス', icon: '☁️' },
+  { title: 'ソフトウェアアーキテクチャ', description: 'デザインパターン、クリーンアーキテクチャ', icon: '🏗️' },
 ];
 
 export default function LearnScreen() {

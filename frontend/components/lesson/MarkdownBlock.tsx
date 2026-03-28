@@ -1,57 +1,73 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import Markdown from 'react-native-markdown-display';
 
 type Props = {
   text: string;
 };
 
 export default function MarkdownBlock({ text }: Props) {
-  const lines = text.split('\n');
-
   return (
-    <View style={styles.container}>
-      {lines.map((line, index) => {
-        if (line.startsWith('# ')) {
-          return <Text key={index} style={styles.h1}>{line.slice(2)}</Text>;
-        }
-        if (line.startsWith('## ')) {
-          return <Text key={index} style={styles.h2}>{line.slice(3)}</Text>;
-        }
-        if (line.startsWith('### ')) {
-          return <Text key={index} style={styles.h3}>{line.slice(4)}</Text>;
-        }
-        if (line.startsWith('- ')) {
-          return (
-            <View key={index} style={styles.listItem}>
-              <Text style={styles.bullet}>•</Text>
-              <Text style={styles.listText}>{line.slice(2)}</Text>
-            </View>
-          );
-        }
-        if (line.startsWith('| ')) {
-          return (
-            <Text key={index} style={styles.tableRow}>
-              {line}
-            </Text>
-          );
-        }
-        if (line.trim() === '') {
-          return <View key={index} style={styles.spacer} />;
-        }
-        return <Text key={index} style={styles.paragraph}>{line}</Text>;
-      })}
-    </View>
+    <Markdown style={markdownStyles}>
+      {text}
+    </Markdown>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { paddingVertical: 4 },
-  h1: { fontSize: 26, fontWeight: 'bold', color: '#1a1a2e', marginBottom: 12, marginTop: 8 },
-  h2: { fontSize: 22, fontWeight: '600', color: '#1a1a2e', marginBottom: 8, marginTop: 16 },
-  h3: { fontSize: 18, fontWeight: '600', color: '#1a1a2e', marginBottom: 6, marginTop: 12 },
-  paragraph: { fontSize: 16, lineHeight: 26, color: '#333' },
-  listItem: { flexDirection: 'row', paddingLeft: 8, marginVertical: 2 },
-  bullet: { fontSize: 16, color: '#4361ee', marginRight: 8, lineHeight: 26 },
-  listText: { fontSize: 16, lineHeight: 26, color: '#333', flex: 1 },
-  tableRow: { fontSize: 14, fontFamily: 'SpaceMono', color: '#333', lineHeight: 24 },
-  spacer: { height: 8 },
+const markdownStyles = StyleSheet.create({
+  body: { fontSize: 16, lineHeight: 26, color: '#333' },
+  heading1: { fontSize: 26, fontWeight: 'bold', color: '#1a1a2e', marginBottom: 12, marginTop: 8 },
+  heading2: { fontSize: 22, fontWeight: '600', color: '#1a1a2e', marginBottom: 8, marginTop: 20 },
+  heading3: { fontSize: 18, fontWeight: '600', color: '#1a1a2e', marginBottom: 6, marginTop: 14 },
+  paragraph: { fontSize: 16, lineHeight: 26, color: '#333', marginBottom: 10 },
+  strong: { fontWeight: 'bold', color: '#1a1a2e' },
+  em: { fontStyle: 'italic' },
+  link: { color: '#4361ee', textDecorationLine: 'underline' },
+  blockquote: {
+    backgroundColor: '#f0f4ff',
+    borderLeftWidth: 4,
+    borderLeftColor: '#4361ee',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginVertical: 8,
+  },
+  code_inline: {
+    backgroundColor: '#f0f0f5',
+    color: '#e74c3c',
+    fontFamily: 'SpaceMono',
+    fontSize: 14,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  code_block: {
+    backgroundColor: '#1e1e2e',
+    color: '#e0e0ff',
+    fontFamily: 'SpaceMono',
+    fontSize: 14,
+    lineHeight: 22,
+    padding: 16,
+    borderRadius: 12,
+    marginVertical: 8,
+  },
+  fence: {
+    backgroundColor: '#1e1e2e',
+    color: '#e0e0ff',
+    fontFamily: 'SpaceMono',
+    fontSize: 14,
+    lineHeight: 22,
+    padding: 16,
+    borderRadius: 12,
+    marginVertical: 8,
+  },
+  list_item: { flexDirection: 'row', marginVertical: 2 },
+  bullet_list: { marginVertical: 4 },
+  ordered_list: { marginVertical: 4 },
+  bullet_list_icon: { color: '#4361ee', fontSize: 16, marginRight: 8 },
+  ordered_list_icon: { color: '#4361ee', fontSize: 16, marginRight: 8 },
+  table: { borderWidth: 1, borderColor: '#e0e0e0', borderRadius: 8, marginVertical: 8 },
+  thead: { backgroundColor: '#f0f4ff' },
+  th: { padding: 10, fontWeight: '600', fontSize: 14, color: '#1a1a2e', borderWidth: 0.5, borderColor: '#e0e0e0' },
+  td: { padding: 10, fontSize: 14, color: '#333', borderWidth: 0.5, borderColor: '#e0e0e0' },
+  tr: { borderBottomWidth: 1, borderColor: '#e0e0e0' },
+  hr: { backgroundColor: '#e0e0e0', height: 1, marginVertical: 16 },
 });

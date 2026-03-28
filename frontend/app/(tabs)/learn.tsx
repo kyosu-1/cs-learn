@@ -6,10 +6,10 @@ const topicIcons: Record<string, string> = {
   'algorithms-data-structures': '🔢',
   'operating-systems': '⚙️',
   'computer-networks': '🌐',
+  'computer-architecture': '🖥️',
 };
 
 const comingSoonTopics = [
-  { title: 'コンピュータアーキテクチャ', description: 'CPU、メモリ階層、パイプライン', icon: '🖥️' },
   { title: 'クラウドコンピューティング', description: 'AWS、コンテナ、マイクロサービス', icon: '☁️' },
   { title: 'ソフトウェアアーキテクチャ', description: 'デザインパターン、クリーンアーキテクチャ', icon: '🏗️' },
 ];

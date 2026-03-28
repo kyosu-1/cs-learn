@@ -2,8 +2,13 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator
 import { router } from 'expo-router';
 import { useTopics } from '@/hooks/useContent';
 
+const topicIcons: Record<string, string> = {
+  'algorithms-data-structures': '🔢',
+  'operating-systems': '⚙️',
+  'computer-networks': '🌐',
+};
+
 const comingSoonTopics = [
-  { title: 'オペレーティングシステム', description: 'プロセス管理、メモリ、ファイルシステム', icon: '⚙️' },
   { title: 'コンピュータネットワーク', description: 'TCP/IP、HTTP、DNS、ルーティング', icon: '🌐' },
   { title: 'コンピュータアーキテクチャ', description: 'CPU、メモリ階層、パイプライン', icon: '🖥️' },
 ];
@@ -29,7 +34,7 @@ export default function LearnScreen() {
           onPress={() => router.push(`/learn/${topic.slug}`)}
         >
           <View style={styles.topicHeader}>
-            <Text style={styles.topicIcon}>🔢</Text>
+            <Text style={styles.topicIcon}>{topicIcons[topic.slug] || '📚'}</Text>
             <View style={styles.topicInfo}>
               <Text style={styles.topicTitle}>{topic.title}</Text>
               <Text style={styles.topicDescription}>{topic.description}</Text>

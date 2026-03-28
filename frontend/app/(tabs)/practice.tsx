@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
-import { useCategories } from '@/hooks/useContent';
+import { useTopics, useCategories } from '@/hooks/useContent';
 import { useQuizzesByCategory } from '@/hooks/useQuiz';
-import type { Category } from '@/lib/types';
+import type { Category, Topic } from '@/lib/types';
 
 const difficultyLabels: Record<number, string> = { 1: '初級', 2: '中級', 3: '上級', 4: '大学院' };
 const difficultyColors: Record<number, string> = { 1: '#4caf50', 2: '#2196f3', 3: '#ff9800', 4: '#e91e63' };
@@ -34,8 +34,23 @@ function CategoryQuizzes({ category }: { category: Category }) {
   );
 }
 
+function TopicQuizzes({ topic }: { topic: Topic }) {
+  const { data: categories } = useCategories(topic.slug);
+
+  if (!categories || categories.length === 0) return null;
+
+  return (
+    <View>
+      <Text style={styles.topicTitle}>{topic.title}</Text>
+      {categories.map((category) => (
+        <CategoryQuizzes key={category.id} category={category} />
+      ))}
+    </View>
+  );
+}
+
 export default function PracticeScreen() {
-  const { data: categories, isLoading } = useCategories('algorithms-data-structures');
+  const { data: topics, isLoading } = useTopics();
 
   return (
     <ScrollView style={styles.container}>
@@ -46,8 +61,8 @@ export default function PracticeScreen() {
 
       {isLoading && <ActivityIndicator size="large" color="#4361ee" style={{ marginTop: 40 }} />}
 
-      {categories?.map((category) => (
-        <CategoryQuizzes key={category.id} category={category} />
+      {topics?.map((topic) => (
+        <TopicQuizzes key={topic.id} topic={topic} />
       ))}
     </ScrollView>
   );
@@ -78,4 +93,5 @@ const styles = StyleSheet.create({
   quizTitle: { fontSize: 16, fontWeight: '500', color: '#1a1a2e', flex: 1 },
   badge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, marginLeft: 8 },
   badgeText: { fontSize: 12, fontWeight: '600' },
+  topicTitle: { fontSize: 22, fontWeight: 'bold', color: '#1a1a2e', paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
 });

@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
+import { useDashboard } from '@/hooks/useProgress';
 
 export default function HomeScreen() {
   const { user, isAuthenticated } = useAuthStore();
+  const { data: dashboard } = useDashboard();
 
   return (
     <ScrollView style={styles.container}>
@@ -29,28 +31,50 @@ export default function HomeScreen() {
         <Text style={styles.statsTitle}>学習状況</Text>
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{user?.level ?? 1}</Text>
+            <Text style={styles.statNumber}>{dashboard?.level ?? user?.level ?? 1}</Text>
             <Text style={styles.statLabel}>レベル</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{user?.xp ?? 0}</Text>
+            <Text style={styles.statNumber}>{dashboard?.xp ?? user?.xp ?? 0}</Text>
             <Text style={styles.statLabel}>XP</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>0</Text>
+            <Text style={styles.statNumber}>{dashboard?.completed_lessons ?? 0}</Text>
             <Text style={styles.statLabel}>完了レッスン</Text>
           </View>
         </View>
+
+        {dashboard && (
+          <View style={styles.xpBarContainer}>
+            <View style={styles.xpBar}>
+              <View style={[styles.xpFill, {
+                width: `${dashboard.xp_for_next_level > 0 ? ((dashboard.xp % 100) / dashboard.xp_for_next_level) * 100 : 0}%`
+              }]} />
+            </View>
+            <Text style={styles.xpText}>次のレベルまで {dashboard.xp_for_next_level - (dashboard.xp % 100)} XP</Text>
+          </View>
+        )}
       </View>
+
+      {dashboard && dashboard.quiz_attempts > 0 && (
+        <View style={styles.accuracyCard}>
+          <Text style={styles.accuracyLabel}>クイズ正答率</Text>
+          <Text style={styles.accuracyValue}>{dashboard.accuracy}%</Text>
+          <Text style={styles.accuracySub}>{dashboard.quiz_attempts} 回の挑戦</Text>
+        </View>
+      )}
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>おすすめ</Text>
-        <View style={styles.card}>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => router.push('/learn/algorithms-data-structures')}
+        >
           <Text style={styles.cardTitle}>アルゴリズム & データ構造</Text>
           <Text style={styles.cardDescription}>
             ソート、探索、木構造、グラフなど基本的なアルゴリズムとデータ構造を学びます
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -93,6 +117,26 @@ const styles = StyleSheet.create({
   statItem: { alignItems: 'center' },
   statNumber: { fontSize: 32, fontWeight: 'bold', color: '#4361ee' },
   statLabel: { fontSize: 12, color: '#666', marginTop: 4 },
+  xpBarContainer: { marginTop: 16 },
+  xpBar: { height: 6, backgroundColor: '#e9ecef', borderRadius: 3, overflow: 'hidden' },
+  xpFill: { height: '100%', backgroundColor: '#4361ee', borderRadius: 3 },
+  xpText: { fontSize: 12, color: '#999', marginTop: 4, textAlign: 'right' },
+  accuracyCard: {
+    margin: 16,
+    marginTop: 0,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  accuracyLabel: { fontSize: 14, color: '#666' },
+  accuracyValue: { fontSize: 36, fontWeight: 'bold', color: '#4caf50', marginVertical: 4 },
+  accuracySub: { fontSize: 12, color: '#999' },
   section: { padding: 16 },
   sectionTitle: { fontSize: 20, fontWeight: '600', marginBottom: 12 },
   card: {

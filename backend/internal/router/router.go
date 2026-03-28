@@ -9,9 +9,10 @@ import (
 )
 
 type Services struct {
-	Auth    *service.AuthService
-	Content *service.ContentService
-	Quiz    *service.QuizService
+	Auth     *service.AuthService
+	Content  *service.ContentService
+	Quiz     *service.QuizService
+	Progress *service.ProgressService
 }
 
 func New(svc *Services) *chi.Mux {
@@ -32,6 +33,7 @@ func New(svc *Services) *chi.Mux {
 	authHandler := handler.NewAuthHandler(svc.Auth)
 	contentHandler := handler.NewContentHandler(svc.Content)
 	quizHandler := handler.NewQuizHandler(svc.Quiz)
+	progressHandler := handler.NewProgressHandler(svc.Progress)
 
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Get("/health", handler.HealthCheck)
@@ -64,6 +66,12 @@ func New(svc *Services) *chi.Mux {
 			r.Use(handler.AuthMiddleware(svc.Auth))
 			r.Get("/me", authHandler.Me)
 			r.Post("/quizzes/{quizID}/submit", quizHandler.Submit)
+
+			// Progress routes
+			r.Get("/me/progress", progressHandler.GetDashboard)
+			r.Put("/me/lessons/{lessonID}/progress", progressHandler.UpdateLessonProgress)
+			r.Get("/me/weaknesses", progressHandler.GetWeaknesses)
+			r.Get("/me/activity", progressHandler.GetRecentActivity)
 		})
 	})
 

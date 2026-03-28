@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
+import { useDashboard } from '@/hooks/useProgress';
 
 export default function ProfileScreen() {
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { data: dashboard } = useDashboard();
 
-  const xpForNextLevel = (user?.level ?? 1) * 100;
-  const xpProgress = user ? (user.xp % 100) / xpForNextLevel * 100 : 0;
+  const xpForNextLevel = dashboard?.xp_for_next_level ?? (user?.level ?? 1) * 100;
+  const currentXP = dashboard?.xp ?? user?.xp ?? 0;
+  const xpProgress = xpForNextLevel > 0 ? ((currentXP % 100) / xpForNextLevel) * 100 : 0;
 
   const handleLogout = async () => {
     await logout();
@@ -41,7 +44,7 @@ export default function ProfileScreen() {
           </Text>
         </View>
         <Text style={styles.name}>{user?.display_name}</Text>
-        <Text style={styles.level}>レベル {user?.level}</Text>
+        <Text style={styles.level}>レベル {dashboard?.level ?? user?.level}</Text>
       </View>
 
       <View style={styles.xpCard}>
@@ -49,27 +52,27 @@ export default function ProfileScreen() {
         <View style={styles.xpBar}>
           <View style={[styles.xpFill, { width: `${xpProgress}%` }]} />
         </View>
-        <Text style={styles.xpText}>{user?.xp ?? 0} / {xpForNextLevel} XP</Text>
+        <Text style={styles.xpText}>{currentXP} / {xpForNextLevel} XP</Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>学習統計</Text>
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
-            <Text style={styles.statNumber}>0</Text>
+            <Text style={styles.statNumber}>{dashboard?.completed_lessons ?? 0}</Text>
             <Text style={styles.statLabel}>完了レッスン</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statNumber}>0</Text>
+            <Text style={styles.statNumber}>{dashboard?.quiz_attempts ?? 0}</Text>
             <Text style={styles.statLabel}>クイズ回答数</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statNumber}>0%</Text>
+            <Text style={styles.statNumber}>{dashboard?.accuracy ?? 0}%</Text>
             <Text style={styles.statLabel}>正答率</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statNumber}>0</Text>
-            <Text style={styles.statLabel}>連続学習日数</Text>
+            <Text style={styles.statNumber}>{currentXP}</Text>
+            <Text style={styles.statLabel}>総XP</Text>
           </View>
         </View>
       </View>

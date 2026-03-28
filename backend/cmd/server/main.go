@@ -27,17 +27,20 @@ func main() {
 	userRepo := repository.NewUserRepository(pool)
 	contentRepo := repository.NewContentRepository(pool)
 	quizRepo := repository.NewQuizRepository(pool)
+	progressRepo := repository.NewProgressRepository(pool)
 
 	// Services
 	authSvc := service.NewAuthService(userRepo, cfg.JWTSecret)
 	contentSvc := service.NewContentService(contentRepo)
 	quizSvc := service.NewQuizService(quizRepo)
+	progressSvc := service.NewProgressService(progressRepo, userRepo)
 
 	// Router
 	r := router.New(&router.Services{
-		Auth:    authSvc,
-		Content: contentSvc,
-		Quiz:    quizSvc,
+		Auth:     authSvc,
+		Content:  contentSvc,
+		Quiz:     quizSvc,
+		Progress: progressSvc,
 	})
 
 	log.Printf("Server starting on :%s", cfg.Port)

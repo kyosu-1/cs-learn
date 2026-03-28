@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build
+backend/bin/
+frontend/dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Expo
+frontend/.expo/
+frontend/ios/
+frontend/android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.out
+
+# PostgreSQL data
+pgdata/

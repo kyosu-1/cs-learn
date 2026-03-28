@@ -23,6 +23,11 @@ func main() {
 	defer pool.Close()
 	log.Println("Connected to database")
 
+	// Auto-migrate
+	if err := db.RunMigrations(cfg.DatabaseURL); err != nil {
+		log.Fatalf("Failed to run migrations: %v", err)
+	}
+
 	// Repositories
 	userRepo := repository.NewUserRepository(pool)
 	contentRepo := repository.NewContentRepository(pool)

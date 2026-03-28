@@ -1,10 +1,10 @@
 -- Quiz: ソートアルゴリズム
 INSERT INTO quizzes (id, category_id, title, difficulty_level, is_published)
-VALUES ('q0000000-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001',
+VALUES ('d0000000-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001',
   'ソートアルゴリズム基礎クイズ', 1, true);
 
 INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answer, explanation, sort_order, points) VALUES
-('qq000000-0000-0000-0000-000000000001', 'q0000000-0000-0000-0000-000000000001',
+('ee000000-0000-0000-0000-000000000001', 'd0000000-0000-0000-0000-000000000001',
   'multiple_choice',
   'バブルソートの最悪計算量は？',
   '[{"id":"a","text":"O(n)"},{"id":"b","text":"O(n log n)"},{"id":"c","text":"O(n²)"},{"id":"d","text":"O(2^n)"}]',
@@ -12,7 +12,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   'バブルソートは各要素を全ての他の要素と比較する可能性があるため、最悪計算量は O(n²) です。',
   1, 10),
 
-('qq000000-0000-0000-0000-000000000002', 'q0000000-0000-0000-0000-000000000001',
+('ee000000-0000-0000-0000-000000000002', 'd0000000-0000-0000-0000-000000000001',
   'multiple_choice',
   'マージソートはどのアルゴリズム設計パラダイムに基づいていますか？',
   '[{"id":"a","text":"貪欲法"},{"id":"b","text":"分割統治法"},{"id":"c","text":"動的計画法"},{"id":"d","text":"バックトラッキング"}]',
@@ -20,7 +20,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   'マージソートは配列を分割し、各部分を再帰的にソートしてからマージする「分割統治法」の代表的なアルゴリズムです。',
   2, 10),
 
-('qq000000-0000-0000-0000-000000000003', 'q0000000-0000-0000-0000-000000000001',
+('ee000000-0000-0000-0000-000000000003', 'd0000000-0000-0000-0000-000000000001',
   'multiple_choice',
   'クイックソートで最悪ケースが発生するのはどのような場合？',
   '[{"id":"a","text":"ランダムな配列"},{"id":"b","text":"すでにソート済みの配列（先頭をピボットにした場合）"},{"id":"c","text":"全て同じ値の配列"},{"id":"d","text":"逆順の配列（中央をピボットにした場合）"}]',
@@ -28,7 +28,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   'すでにソート済みの配列で先頭要素をピボットに選ぶと、分割が極端に偏り O(n²) になります。',
   3, 10),
 
-('qq000000-0000-0000-0000-000000000004', 'q0000000-0000-0000-0000-000000000001',
+('ee000000-0000-0000-0000-000000000004', 'd0000000-0000-0000-0000-000000000001',
   'true_false',
   'マージソートは安定ソートである。',
   '[{"id":"true","text":"正しい"},{"id":"false","text":"誤り"}]',
@@ -36,7 +36,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   'マージソートは等しい要素の相対的な順序を保持するため、安定ソートです。',
   4, 10),
 
-('qq000000-0000-0000-0000-000000000005', 'q0000000-0000-0000-0000-000000000001',
+('ee000000-0000-0000-0000-000000000005', 'd0000000-0000-0000-0000-000000000001',
   'fill_in_blank',
   'マージソートの空間計算量は O(___) です。（nを使って記述）',
   NULL,
@@ -46,11 +46,11 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
 
 -- Quiz: 探索アルゴリズム
 INSERT INTO quizzes (id, category_id, title, difficulty_level, is_published)
-VALUES ('q0000000-0000-0000-0000-000000000002', 'c0000000-0000-0000-0000-000000000002',
+VALUES ('d0000000-0000-0000-0000-000000000002', 'c0000000-0000-0000-0000-000000000002',
   '探索アルゴリズム基礎クイズ', 1, true);
 
 INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answer, explanation, sort_order, points) VALUES
-('qq000000-0000-0000-0000-000000000006', 'q0000000-0000-0000-0000-000000000002',
+('ee000000-0000-0000-0000-000000000006', 'd0000000-0000-0000-0000-000000000002',
   'multiple_choice',
   '二分探索の計算量は？',
   '[{"id":"a","text":"O(1)"},{"id":"b","text":"O(log n)"},{"id":"c","text":"O(n)"},{"id":"d","text":"O(n log n)"}]',
@@ -58,7 +58,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   '二分探索は毎回探索範囲を半分にするため、O(log n) の計算量です。',
   1, 10),
 
-('qq000000-0000-0000-0000-000000000007', 'q0000000-0000-0000-0000-000000000002',
+('ee000000-0000-0000-0000-000000000007', 'd0000000-0000-0000-0000-000000000002',
   'true_false',
   '二分探索はソートされていない配列にも適用できる。',
   '[{"id":"true","text":"正しい"},{"id":"false","text":"誤り"}]',
@@ -66,7 +66,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   '二分探索はソート済み配列が前提条件です。未ソートの配列には線形探索を使います。',
   2, 10),
 
-('qq000000-0000-0000-0000-000000000008', 'q0000000-0000-0000-0000-000000000002',
+('ee000000-0000-0000-0000-000000000008', 'd0000000-0000-0000-0000-000000000002',
   'fill_in_blank',
   '1,000,000要素のソート済み配列に対する二分探索では、最大約___回の比較で目的の要素を見つけられます。',
   NULL,
@@ -76,11 +76,11 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
 
 -- Quiz: 木構造
 INSERT INTO quizzes (id, category_id, title, difficulty_level, is_published)
-VALUES ('q0000000-0000-0000-0000-000000000003', 'c0000000-0000-0000-0000-000000000003',
+VALUES ('d0000000-0000-0000-0000-000000000003', 'c0000000-0000-0000-0000-000000000003',
   '木構造基礎クイズ', 1, true);
 
 INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answer, explanation, sort_order, points) VALUES
-('qq000000-0000-0000-0000-000000000009', 'q0000000-0000-0000-0000-000000000003',
+('ee000000-0000-0000-0000-000000000009', 'd0000000-0000-0000-0000-000000000003',
   'multiple_choice',
   '二分探索木（BST）の中順走査（Inorder Traversal）の結果はどうなりますか？',
   '[{"id":"a","text":"挿入順"},{"id":"b","text":"昇順（ソート済み）"},{"id":"c","text":"降順"},{"id":"d","text":"ランダム順"}]',
@@ -88,7 +88,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   'BSTの中順走査は「左→根→右」の順で訪問するため、結果は昇順になります。',
   1, 10),
 
-('qq000000-0000-0000-0000-000000000010', 'q0000000-0000-0000-0000-000000000003',
+('ee000000-0000-0000-0000-000000000010', 'd0000000-0000-0000-0000-000000000003',
   'multiple_choice',
   '完全二分木（n個のノード）の高さは？',
   '[{"id":"a","text":"O(n)"},{"id":"b","text":"O(log n)"},{"id":"c","text":"O(n²)"},{"id":"d","text":"O(1)"}]',
@@ -98,11 +98,11 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
 
 -- Quiz: グラフ
 INSERT INTO quizzes (id, category_id, title, difficulty_level, is_published)
-VALUES ('q0000000-0000-0000-0000-000000000004', 'c0000000-0000-0000-0000-000000000004',
+VALUES ('d0000000-0000-0000-0000-000000000004', 'c0000000-0000-0000-0000-000000000004',
   'グラフ探索クイズ', 2, true);
 
 INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answer, explanation, sort_order, points) VALUES
-('qq000000-0000-0000-0000-000000000011', 'q0000000-0000-0000-0000-000000000004',
+('ee000000-0000-0000-0000-000000000011', 'd0000000-0000-0000-0000-000000000004',
   'multiple_choice',
   '重みなしグラフで最短経路を求めるのに適したアルゴリズムは？',
   '[{"id":"a","text":"DFS"},{"id":"b","text":"BFS"},{"id":"c","text":"ダイクストラ法"},{"id":"d","text":"プリム法"}]',
@@ -110,7 +110,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   'BFSは開始ノードから近い順に探索するため、重みなしグラフの最短経路を保証します。',
   1, 10),
 
-('qq000000-0000-0000-0000-000000000012', 'q0000000-0000-0000-0000-000000000004',
+('ee000000-0000-0000-0000-000000000012', 'd0000000-0000-0000-0000-000000000004',
   'multiple_choice',
   'DFS（深さ優先探索）の実装に使われるデータ構造は？',
   '[{"id":"a","text":"キュー"},{"id":"b","text":"スタック"},{"id":"c","text":"ヒープ"},{"id":"d","text":"ハッシュテーブル"}]',
@@ -118,7 +118,7 @@ INSERT INTO questions (id, quiz_id, question_type, prompt, options, correct_answ
   'DFSはスタック（または再帰呼び出しの暗黙的スタック）を使って、深さ方向に探索を進めます。',
   2, 10),
 
-('qq000000-0000-0000-0000-000000000013', 'q0000000-0000-0000-0000-000000000004',
+('ee000000-0000-0000-0000-000000000013', 'd0000000-0000-0000-0000-000000000004',
   'true_false',
   'BFS（幅優先探索）の実装にはキューを使用する。',
   '[{"id":"true","text":"正しい"},{"id":"false","text":"誤り"}]',

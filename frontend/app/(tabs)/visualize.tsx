@@ -3,8 +3,12 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-nati
 import SortingViz from '@/components/visualization/SortingViz';
 import TreeTraversalViz from '@/components/visualization/TreeTraversalViz';
 import GraphViz from '@/components/visualization/GraphViz';
+import SchedulingViz from '@/components/visualization/SchedulingViz';
+import PageReplacementViz from '@/components/visualization/PageReplacementViz';
+import HandshakeViz from '@/components/visualization/HandshakeViz';
+import DNSViz from '@/components/visualization/DNSViz';
 
-type VizCategory = 'sorting' | 'tree' | 'graph';
+type VizCategory = 'sorting' | 'tree' | 'graph' | 'os' | 'network';
 type VizItem = {
   category: VizCategory;
   key: string;
@@ -21,12 +25,21 @@ const visualizations: VizItem[] = [
   { category: 'tree', key: 'bfs-tree', title: 'BFS (木)', component: <TreeTraversalViz traversalType="bfs" /> },
   { category: 'graph', key: 'bfs-graph', title: 'BFS (グラフ)', component: <GraphViz algorithm="bfs" /> },
   { category: 'graph', key: 'dfs-graph', title: 'DFS (グラフ)', component: <GraphViz algorithm="dfs" /> },
+  { category: 'os', key: 'fcfs', title: 'FCFS スケジューリング', component: <SchedulingViz algorithm="fcfs" /> },
+  { category: 'os', key: 'rr', title: 'Round Robin', component: <SchedulingViz algorithm="rr" /> },
+  { category: 'os', key: 'page-fifo', title: 'FIFO ページ置換', component: <PageReplacementViz algorithm="fifo" /> },
+  { category: 'os', key: 'page-lru', title: 'LRU ページ置換', component: <PageReplacementViz algorithm="lru" /> },
+  { category: 'network', key: 'tcp-connect', title: 'TCP 接続確立', component: <HandshakeViz type="tcp-connect" /> },
+  { category: 'network', key: 'tcp-close', title: 'TCP 切断', component: <HandshakeViz type="tcp-close" /> },
+  { category: 'network', key: 'dns', title: 'DNS 名前解決', component: <DNSViz /> },
 ];
 
 const categoryLabels: Record<VizCategory, string> = {
   sorting: 'ソート',
   tree: '木の走査',
   graph: 'グラフ探索',
+  os: 'OS',
+  network: 'ネットワーク',
 };
 
 export default function VisualizeScreen() {
@@ -84,7 +97,7 @@ export default function VisualizeScreen() {
             onPress={() => setSelected(viz.key)}
           >
             <Text style={styles.vizIcon}>
-              {viz.category === 'sorting' ? '📊' : viz.category === 'tree' ? '🌳' : '🔗'}
+              {viz.category === 'sorting' ? '📊' : viz.category === 'tree' ? '🌳' : viz.category === 'graph' ? '🔗' : viz.category === 'os' ? '⚙️' : '🌐'}
             </Text>
             <Text style={styles.vizTitle}>{viz.title}</Text>
             <Text style={styles.vizCategory}>{categoryLabels[viz.category]}</Text>

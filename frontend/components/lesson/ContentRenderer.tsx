@@ -3,6 +3,7 @@ import type { LessonBlock } from '@/lib/types';
 import MarkdownBlock from './MarkdownBlock';
 import CodeBlock from './CodeBlock';
 import CalloutBlock from './CalloutBlock';
+import DiagramBlock from './DiagramBlock';
 
 type Props = {
   blocks: LessonBlock[];
@@ -31,6 +32,14 @@ export default function ContentRenderer({ blocks }: Props) {
                 key={block.id}
                 type={content.type}
                 text={content.text}
+              />
+            );
+          case 'diagram':
+            return (
+              <DiagramBlock
+                key={block.id}
+                source={content.source}
+                diagramType={content.diagram_type}
               />
             );
           default:

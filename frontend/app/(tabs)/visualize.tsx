@@ -7,8 +7,10 @@ import SchedulingViz from '@/components/visualization/SchedulingViz';
 import PageReplacementViz from '@/components/visualization/PageReplacementViz';
 import HandshakeViz from '@/components/visualization/HandshakeViz';
 import DNSViz from '@/components/visualization/DNSViz';
+import LogicGateViz from '@/components/visualization/LogicGateViz';
+import AdderViz from '@/components/visualization/AdderViz';
 
-type VizCategory = 'sorting' | 'tree' | 'graph' | 'os' | 'network';
+type VizCategory = 'sorting' | 'tree' | 'graph' | 'os' | 'network' | 'circuit';
 type VizItem = {
   category: VizCategory;
   key: string;
@@ -32,6 +34,13 @@ const visualizations: VizItem[] = [
   { category: 'network', key: 'tcp-connect', title: 'TCP 接続確立', component: <HandshakeViz type="tcp-connect" /> },
   { category: 'network', key: 'tcp-close', title: 'TCP 切断', component: <HandshakeViz type="tcp-close" /> },
   { category: 'network', key: 'dns', title: 'DNS 名前解決', component: <DNSViz /> },
+  { category: 'circuit', key: 'and', title: 'AND ゲート', component: <LogicGateViz gateType="AND" /> },
+  { category: 'circuit', key: 'or', title: 'OR ゲート', component: <LogicGateViz gateType="OR" /> },
+  { category: 'circuit', key: 'nand', title: 'NAND ゲート', component: <LogicGateViz gateType="NAND" /> },
+  { category: 'circuit', key: 'xor', title: 'XOR ゲート', component: <LogicGateViz gateType="XOR" /> },
+  { category: 'circuit', key: 'not', title: 'NOT ゲート', component: <LogicGateViz gateType="NOT" /> },
+  { category: 'circuit', key: 'half-adder', title: '半加算器', component: <AdderViz type="half" /> },
+  { category: 'circuit', key: 'full-adder', title: '全加算器', component: <AdderViz type="full" /> },
 ];
 
 const categoryLabels: Record<VizCategory, string> = {
@@ -40,6 +49,7 @@ const categoryLabels: Record<VizCategory, string> = {
   graph: 'グラフ探索',
   os: 'OS',
   network: 'ネットワーク',
+  circuit: '論理回路',
 };
 
 export default function VisualizeScreen() {
@@ -97,7 +107,7 @@ export default function VisualizeScreen() {
             onPress={() => setSelected(viz.key)}
           >
             <Text style={styles.vizIcon}>
-              {viz.category === 'sorting' ? '📊' : viz.category === 'tree' ? '🌳' : viz.category === 'graph' ? '🔗' : viz.category === 'os' ? '⚙️' : '🌐'}
+              {viz.category === 'sorting' ? '📊' : viz.category === 'tree' ? '🌳' : viz.category === 'graph' ? '🔗' : viz.category === 'os' ? '⚙️' : viz.category === 'circuit' ? '🔌' : '🌐'}
             </Text>
             <Text style={styles.vizTitle}>{viz.title}</Text>
             <Text style={styles.vizCategory}>{categoryLabels[viz.category]}</Text>

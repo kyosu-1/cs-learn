@@ -1,13 +1,40 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { Link, router } from 'expo-router';
+import { apiClient } from '@/lib/api';
+import { useAuthStore } from '@/stores/authStore';
+import type { User, AuthTokens } from '@/lib/types';
+
+type LoginResponse = {
+  user: User;
+  tokens: AuthTokens;
+};
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const setAuth = useAuthStore((s) => s.setAuth);
 
-  const handleLogin = () => {
-    // TODO: implement login API call
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('エラー', 'メールアドレスとパスワードを入力してください');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const data = await apiClient<LoginResponse>('/auth/login', {
+        method: 'POST',
+        body: { email, password },
+      });
+      await setAuth(data.user, data.tokens.access_token, data.tokens.refresh_token);
+      router.replace('/(tabs)');
+    } catch (err) {
+      Alert.alert('ログイン失敗', err instanceof Error ? err.message : 'エラーが発生しました');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,8 +60,12 @@ export default function LoginScreen() {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>ログイン</Text>
+        <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>ログイン</Text>
+          )}
         </TouchableOpacity>
 
         <Link href="/(auth)/register" style={styles.link}>

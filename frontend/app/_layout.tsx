@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { useAuthStore } from '@/stores/authStore';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -22,15 +23,18 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+  const restore = useAuthStore((s) => s.restore);
 
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
+    restore().finally(() => {
+      if (loaded) {
+        SplashScreen.hideAsync();
+      }
+    });
   }, [loaded]);
 
   if (!loaded) {

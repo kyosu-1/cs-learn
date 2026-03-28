@@ -1,20 +1,54 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { router } from 'expo-router';
+import { useCategories } from '@/hooks/useContent';
+import { useQuizzesByCategory } from '@/hooks/useQuiz';
+import type { Category } from '@/lib/types';
+
+const difficultyLabels: Record<number, string> = { 1: '初級', 2: '中級', 3: '上級', 4: '大学院' };
+const difficultyColors: Record<number, string> = { 1: '#4caf50', 2: '#2196f3', 3: '#ff9800', 4: '#e91e63' };
+
+function CategoryQuizzes({ category }: { category: Category }) {
+  const { data: quizzes, isLoading } = useQuizzesByCategory(category.id);
+
+  if (isLoading) return <ActivityIndicator color="#4361ee" style={{ padding: 16 }} />;
+  if (!quizzes || quizzes.length === 0) return null;
+
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{category.title}</Text>
+      {quizzes.map((quiz) => (
+        <TouchableOpacity
+          key={quiz.id}
+          style={styles.quizCard}
+          onPress={() => router.push(`/quiz/${quiz.id}`)}
+        >
+          <Text style={styles.quizTitle}>{quiz.title}</Text>
+          <View style={[styles.badge, { backgroundColor: difficultyColors[quiz.difficulty_level] + '20' }]}>
+            <Text style={[styles.badgeText, { color: difficultyColors[quiz.difficulty_level] }]}>
+              {difficultyLabels[quiz.difficulty_level]}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
 
 export default function PracticeScreen() {
+  const { data: categories, isLoading } = useCategories('algorithms-data-structures');
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>演習問題</Text>
-        <Text style={styles.subtitle}>クイズや問題で知識を確認しましょう</Text>
+        <Text style={styles.subtitle}>クイズで知識を確認しましょう</Text>
       </View>
 
-      <View style={styles.emptyState}>
-        <Text style={styles.emptyIcon}>🧠</Text>
-        <Text style={styles.emptyTitle}>まだ演習問題がありません</Text>
-        <Text style={styles.emptyDescription}>
-          まずは「学習」タブからレッスンを完了して、関連する演習問題を解放しましょう
-        </Text>
-      </View>
+      {isLoading && <ActivityIndicator size="large" color="#4361ee" style={{ marginTop: 40 }} />}
+
+      {categories?.map((category) => (
+        <CategoryQuizzes key={category.id} category={category} />
+      ))}
     </ScrollView>
   );
 }
@@ -24,8 +58,24 @@ const styles = StyleSheet.create({
   header: { padding: 24, paddingTop: 16 },
   title: { fontSize: 28, fontWeight: 'bold', color: '#1a1a2e' },
   subtitle: { fontSize: 16, color: '#666', marginTop: 4 },
-  emptyState: { alignItems: 'center', padding: 40, marginTop: 40 },
-  emptyIcon: { fontSize: 64 },
-  emptyTitle: { fontSize: 18, fontWeight: '600', color: '#1a1a2e', marginTop: 16 },
-  emptyDescription: { fontSize: 14, color: '#666', textAlign: 'center', marginTop: 8, lineHeight: 22 },
+  section: { marginBottom: 16 },
+  sectionTitle: { fontSize: 18, fontWeight: '600', color: '#1a1a2e', paddingHorizontal: 16, marginBottom: 8 },
+  quizCard: {
+    marginHorizontal: 16,
+    marginBottom: 8,
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  quizTitle: { fontSize: 16, fontWeight: '500', color: '#1a1a2e', flex: 1 },
+  badge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, marginLeft: 8 },
+  badgeText: { fontSize: 12, fontWeight: '600' },
 });

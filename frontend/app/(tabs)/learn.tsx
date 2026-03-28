@@ -1,37 +1,16 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { router } from 'expo-router';
+import { useTopics } from '@/hooks/useContent';
 
-const topics = [
-  {
-    title: 'アルゴリズム & データ構造',
-    description: 'ソート、探索、木、グラフなど',
-    icon: '🔢',
-    progress: 0,
-    categories: ['ソート', '探索', '木構造', 'グラフ', '連結リスト'],
-  },
-  {
-    title: 'オペレーティングシステム',
-    description: 'プロセス管理、メモリ、ファイルシステム',
-    icon: '⚙️',
-    progress: 0,
-    comingSoon: true,
-  },
-  {
-    title: 'コンピュータネットワーク',
-    description: 'TCP/IP、HTTP、DNS、ルーティング',
-    icon: '🌐',
-    progress: 0,
-    comingSoon: true,
-  },
-  {
-    title: 'コンピュータアーキテクチャ',
-    description: 'CPU、メモリ階層、パイプライン',
-    icon: '🖥️',
-    progress: 0,
-    comingSoon: true,
-  },
+const comingSoonTopics = [
+  { title: 'オペレーティングシステム', description: 'プロセス管理、メモリ、ファイルシステム', icon: '⚙️' },
+  { title: 'コンピュータネットワーク', description: 'TCP/IP、HTTP、DNS、ルーティング', icon: '🌐' },
+  { title: 'コンピュータアーキテクチャ', description: 'CPU、メモリ階層、パイプライン', icon: '🖥️' },
 ];
 
 export default function LearnScreen() {
+  const { data: topics, isLoading } = useTopics();
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -39,12 +18,28 @@ export default function LearnScreen() {
         <Text style={styles.subtitle}>興味のある分野を選んで学習を始めましょう</Text>
       </View>
 
-      {topics.map((topic, index) => (
+      {isLoading && (
+        <ActivityIndicator size="large" color="#4361ee" style={{ marginTop: 40 }} />
+      )}
+
+      {topics?.map((topic) => (
         <TouchableOpacity
-          key={index}
-          style={[styles.topicCard, topic.comingSoon && styles.comingSoon]}
-          disabled={topic.comingSoon}
+          key={topic.id}
+          style={styles.topicCard}
+          onPress={() => router.push(`/learn/${topic.slug}`)}
         >
+          <View style={styles.topicHeader}>
+            <Text style={styles.topicIcon}>🔢</Text>
+            <View style={styles.topicInfo}>
+              <Text style={styles.topicTitle}>{topic.title}</Text>
+              <Text style={styles.topicDescription}>{topic.description}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      ))}
+
+      {comingSoonTopics.map((topic, index) => (
+        <TouchableOpacity key={index} style={[styles.topicCard, styles.comingSoon]} disabled>
           <View style={styles.topicHeader}>
             <Text style={styles.topicIcon}>{topic.icon}</Text>
             <View style={styles.topicInfo}>
@@ -52,20 +47,9 @@ export default function LearnScreen() {
               <Text style={styles.topicDescription}>{topic.description}</Text>
             </View>
           </View>
-          {topic.comingSoon && (
-            <View style={styles.comingSoonBadge}>
-              <Text style={styles.comingSoonText}>Coming Soon</Text>
-            </View>
-          )}
-          {topic.categories && (
-            <View style={styles.categoryList}>
-              {topic.categories.map((cat, i) => (
-                <View key={i} style={styles.categoryChip}>
-                  <Text style={styles.categoryText}>{cat}</Text>
-                </View>
-              ))}
-            </View>
-          )}
+          <View style={styles.comingSoonBadge}>
+            <Text style={styles.comingSoonText}>Coming Soon</Text>
+          </View>
         </TouchableOpacity>
       ))}
     </ScrollView>
@@ -104,12 +88,4 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   comingSoonText: { fontSize: 12, color: '#666', fontWeight: '600' },
-  categoryList: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 12, gap: 8 },
-  categoryChip: {
-    backgroundColor: '#e8edff',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  categoryText: { fontSize: 13, color: '#4361ee', fontWeight: '500' },
 });

@@ -1,22 +1,55 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Link, router } from 'expo-router';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function ProfileScreen() {
+  const { user, isAuthenticated, logout } = useAuthStore();
+
+  const xpForNextLevel = (user?.level ?? 1) * 100;
+  const xpProgress = user ? (user.xp % 100) / xpForNextLevel * 100 : 0;
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace('/(auth)/login');
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center', padding: 24 }]}>
+        <Text style={{ fontSize: 48, marginBottom: 16 }}>👤</Text>
+        <Text style={{ fontSize: 20, fontWeight: '600', color: '#1a1a2e', marginBottom: 8 }}>
+          ログインが必要です
+        </Text>
+        <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', marginBottom: 24 }}>
+          学習進捗を記録するにはアカウントが必要です
+        </Text>
+        <Link href="/(auth)/login" asChild>
+          <TouchableOpacity style={styles.loginButton}>
+            <Text style={styles.loginButtonText}>ログイン / 登録</Text>
+          </TouchableOpacity>
+        </Link>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>👤</Text>
+          <Text style={styles.avatarText}>
+            {user?.display_name?.charAt(0)?.toUpperCase() ?? '?'}
+          </Text>
         </View>
-        <Text style={styles.name}>ゲスト</Text>
-        <Text style={styles.level}>レベル 1</Text>
+        <Text style={styles.name}>{user?.display_name}</Text>
+        <Text style={styles.level}>レベル {user?.level}</Text>
       </View>
 
       <View style={styles.xpCard}>
         <Text style={styles.xpLabel}>経験値</Text>
         <View style={styles.xpBar}>
-          <View style={[styles.xpFill, { width: '0%' }]} />
+          <View style={[styles.xpFill, { width: `${xpProgress}%` }]} />
         </View>
-        <Text style={styles.xpText}>0 / 100 XP</Text>
+        <Text style={styles.xpText}>{user?.xp ?? 0} / {xpForNextLevel} XP</Text>
       </View>
 
       <View style={styles.section}>
@@ -40,6 +73,10 @@ export default function ProfileScreen() {
           </View>
         </View>
       </View>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutText}>ログアウト</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -51,11 +88,11 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#e8edff',
+    backgroundColor: '#4361ee',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  avatarText: { fontSize: 40 },
+  avatarText: { fontSize: 32, color: '#fff', fontWeight: 'bold' },
   name: { fontSize: 24, fontWeight: 'bold', color: '#1a1a2e', marginTop: 12 },
   level: { fontSize: 16, color: '#4361ee', fontWeight: '600', marginTop: 4 },
   xpCard: {
@@ -99,4 +136,21 @@ const styles = StyleSheet.create({
   },
   statNumber: { fontSize: 28, fontWeight: 'bold', color: '#4361ee' },
   statLabel: { fontSize: 12, color: '#666', marginTop: 4 },
+  logoutButton: {
+    margin: 16,
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e74c3c',
+  },
+  logoutText: { color: '#e74c3c', fontSize: 16, fontWeight: '600' },
+  loginButton: {
+    backgroundColor: '#4361ee',
+    paddingHorizontal: 32,
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  loginButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
 });
